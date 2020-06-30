@@ -4,7 +4,7 @@ Stream-based multiple state management. Multiple state management in one channel
 
 ### Usage
 
-###### Create your own channel and its signal.
+###### Create channel and its signal.
 
 ```
 abstract class MyChannelSignal extends ChannelSignal{}
@@ -15,7 +15,7 @@ class MyChannel extends StateChannel<MyChannelSignal>{
 
 ```
 
-###### Create your own states and its signals
+###### Create states and its signals
 
 ```
 
@@ -89,7 +89,7 @@ class ColorState extends BaseState{
 
 ```
 
-###### Add to your own the channel
+###### Add states to the channel.
 
 ```
 

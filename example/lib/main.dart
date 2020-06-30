@@ -50,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
           condition: (channel, signal) =>
               signal is NotificationStateSignal || signal is ColorStateSignal,
           builder: (context, channel) => SwitchListTile(
-            subtitle: Text('Thsubtitle Text color from ColorState',
+            subtitle: Text('Subtitle Text color from ColorState',
                 style:
                     TextStyle(color: channel.colorState.color.withAlpha(255))),
             secondary: Icon(channel.notificationState.isOpen
