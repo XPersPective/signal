@@ -2,22 +2,22 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'ChannelSignal.dart';
 import 'StateChannel.dart';
- 
 
-  /// [OwnChannelBuilder<C,S>] creates a new [StateChannel] objec and handles building a widget in response to new [StateSignal]. 
-  /// [OwnChannelBuilder<C,S>] does not expose it to its descendants .
-  /// correct usage:
-  ///   
-  /// ```dart
-  /// 
-  ///     OwnChannelBuilder<MyChannel,MyChannelSignal>(
-  ///       channel: MyChannel(),
-  ///       condition: (channel,signal) =>signal is CounterStateSignal,
-  ///       builder: (context, channel) => ....
-  /// ),
-  /// 
-  /// ```
-class OwnChannelBuilder<C extends StateChannel<S>, S extends ChannelSignal>  extends StatefulWidget {
+/// [OwnChannelBuilder<C,S>] creates a new [StateChannel] objec and handles building a widget in response to new [StateSignal].
+/// [OwnChannelBuilder<C,S>] does not expose it to its descendants .
+/// correct usage:
+///
+/// ```dart
+///
+///     OwnChannelBuilder<MyChannel,MyChannelSignal>(
+///       channel: MyChannel(),
+///       condition: (channel,signal) =>signal is CounterStateSignal,
+///       builder: (context, channel) => ....
+/// ),
+///
+/// ```
+class OwnChannelBuilder<C extends StateChannel<S>, S extends ChannelSignal>
+    extends StatefulWidget {
   const OwnChannelBuilder({
     Key key,
     @required this.channel,
@@ -32,13 +32,14 @@ class OwnChannelBuilder<C extends StateChannel<S>, S extends ChannelSignal>  ext
   final Widget Function(BuildContext context, C channel) builder;
 
   @override
-  _OwnChannelBuilderState<C, S> createState() => _OwnChannelBuilderState<C, S>();
+  _OwnChannelBuilderState<C, S> createState() =>
+      _OwnChannelBuilderState<C, S>();
 }
 
-class _OwnChannelBuilderState<C extends StateChannel<S>, S extends ChannelSignal>  extends State<OwnChannelBuilder<C, S>> {
-   
-  ///[channel] that allows broadcasting about the status of state  
-  C channel;  
+class _OwnChannelBuilderState<C extends StateChannel<S>,
+    S extends ChannelSignal> extends State<OwnChannelBuilder<C, S>> {
+  ///[channel] that allows broadcasting about the status of state
+  C channel;
   StreamSubscription<S> _subscription;
 
   @override
@@ -53,7 +54,7 @@ class _OwnChannelBuilderState<C extends StateChannel<S>, S extends ChannelSignal
     final tempchannel = widget.channel;
     if (oldWidget.channel != tempchannel) {
       _unsubscribe();
-       channel.dispose();
+      channel.dispose();
       channel = widget.channel;
       _subscribe();
     }

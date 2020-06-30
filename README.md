@@ -1,6 +1,6 @@
 # signal
 
-Stream-based multiple state management.
+Stream-based multiple state management. Multiple state management in one channel. Similar to the bloc structure, but current states are always accessible.
 
 ### Usage
 

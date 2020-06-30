@@ -1,10 +1,9 @@
-
 /// Base class for a state to be used in [StateChannel]
 /// This class must be inherited to create a state.
 abstract class BaseState {
- BaseState(this._onStateChanged);
- 
- ///A callback that sends a [ChannelSignal] to the [StateChannel]
+  BaseState(this._onStateChanged);
+
+  ///A callback that sends a [ChannelSignal] to the [StateChannel]
   final void Function() _onStateChanged;
 
   bool _busy = false;
@@ -59,9 +58,9 @@ abstract class BaseState {
     };
   }
 
- @override
+  @override
   String toString() {
-    String str='busy: $_busy, success: $_success,  error : $_error';
-      return str;
+    String str = 'busy: $_busy, success: $_success,  error : $_error';
+    return str;
   }
 }

@@ -1,5 +1,5 @@
 name: signal
-description: Stream-based multiple state management.
+description: Stream-based multiple state management.Multiple state management in one channel. Similar to the bloc structure, but current states are always accessible.
 version: 0.0.1
 homepage: https://flutterdersleri.com/
 repository: https://github.com/XPersPective/signal
