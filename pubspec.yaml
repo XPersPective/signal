@@ -1,8 +1,8 @@
 name: signal
-description: A new Flutter package project.
+description: Stream-based multiple state management.
 version: 0.0.1
-author:
-homepage:
+author: Flutterdersleri<xperspectivesignal@gmail.com>
+homepage: https://github.com/XPersPective/signal.git
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
