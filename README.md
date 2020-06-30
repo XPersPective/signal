@@ -230,8 +230,6 @@ void dispose() {
   }
 }
 
-<<<<<<< HEAD
 ```
-=======
-```
->>>>>>> 510c5d73d9df4f18be2299febf778acb1b2579b1
+
+that's all.
