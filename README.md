@@ -229,7 +229,3 @@ void dispose() {
 }
 
 ```
-
-###### AvailableChannelBuilder
-
-[XPersPective](https://github.com/XPersPective/signal.git)
