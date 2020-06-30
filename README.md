@@ -12,11 +12,13 @@ abstract class MyChannelSignal extends ChannelSignal{}
 class MyChannel extends StateChannel<MyChannelSignal>{
  
 }
+
 ```
 
 ###### Create your own states and its signals
 
 ```
+
 class CounterStateSignal extends MyChannelSignal{}
 
 class CounterState extends BaseState{
@@ -149,6 +151,7 @@ class MyApp extends StatelessWidget {
 AncestorChannelBuilder handles building a widget in response to new ChannelSignal broadcasting from AncestorChannelProvider on an ancestor.
 
 ```
+
 AncestorChannelBuilder<MyChannel, MyChannelSignal>(
     condition: (channel, signal) => signal is CounterStateSignal,
     builder: (context, channel) => 
@@ -165,7 +168,6 @@ OwnChannelBuilder creates a new Channel objec and handles building a widget in r
 OwnChannelBuilder does not expose it to its descendants.
 
 ```
-
 
 class OtherWidget extends StatelessWidget {
 
@@ -229,7 +231,3 @@ void dispose() {
 }
 
 ```
-
-###### AvailableChannelBuilder
-
-[XPersPective](https://github.com/XPersPective/signal.git)
