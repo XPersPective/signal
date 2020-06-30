@@ -1,8 +1,9 @@
 name: signal
 description: Stream-based multiple state management.
 version: 0.0.1
-author: Flutterdersleri<xperspectivesignal@gmail.com>
-homepage: https://github.com/XPersPective/signal.git
+homepage: https://github.com/XPersPective/signal
+repository: https://github.com/XPersPective/signal
+issue_tracker: https://github.com/XPersPective/signal/issues
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
