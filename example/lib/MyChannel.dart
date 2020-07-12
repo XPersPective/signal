@@ -25,8 +25,15 @@ class MyChannel extends StateChannel<MyChannelSignal>{
 //signal: ColorStateSignal
   ColorState _colorState;
   ColorState get colorState => _colorState;
+  
+@override
+  initState() {
+     super.initState();
+     _counterState.initState();
+  }
 
 }
+
 
  
 
@@ -36,8 +43,18 @@ class CounterStateSignal extends MyChannelSignal{}
 class CounterState extends BaseState{
   CounterState(void Function() onStateChanged) : super(onStateChanged);
   
- int _count =0;
+ int _count;
  int get count => _count;
+
+  @override
+  initState() {
+    _count=0;
+    doneSucces(signal: false);
+  }
+ @override
+  dispose() {
+  }
+
 
   void increment() {
     _count = _count + 1;
@@ -74,6 +91,8 @@ class CounterState extends BaseState{
       doneError(e.toString());
     }
   }
+
+ 
 }
 
 
@@ -102,6 +121,16 @@ class NotificationState extends BaseState{
     } catch (e) {
       doneError(e.toString());
     }
+  }
+
+  @override
+  dispose() {
+ 
+  }
+
+  @override
+  initState() {
+ 
   }
 
 }
@@ -149,6 +178,16 @@ class ColorState extends BaseState{
         _random.nextInt(256),
         _random.nextInt(256),
       );
+  }
+
+  @override
+  dispose() {
+ 
+  }
+
+  @override
+  initState() {
+ 
   }
 
 }

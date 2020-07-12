@@ -27,6 +27,16 @@ class CounterState extends BaseState{
  int _count =0;
  int get count => _count;
 
+  @override
+  initState() {
+    _count=0;
+    doneSucces(signal: false);
+  }
+
+ @override
+  dispose() {
+  }
+
   void increment() {
     _count = _count + 1;
     doneSucces();
@@ -115,6 +125,13 @@ class MyChannel extends StateChannel<MyChannelSignal>{
   ColorState _colorState;
   ColorState get colorState => _colorState;
 
+
+  @override
+  initState() {
+     super.initState();
+     _counterState.initState();
+  }
+ 
 }
 
 ```
@@ -204,7 +221,7 @@ class _MyHomePageState extends State<MyHomePage> {
 @override
 void initState() {
   super.initState();
-  availableMychannel =MyChannel();
+  availableMychannel =MyChannel()..initState();
 }
 @override
 void dispose() {

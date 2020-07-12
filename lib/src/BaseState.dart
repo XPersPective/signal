@@ -3,6 +3,9 @@
 abstract class BaseState {
   BaseState(this._onStateChanged);
 
+initState();
+dispose();
+
   ///A callback that sends a [ChannelSignal] to the [StateChannel]
   final void Function() _onStateChanged;
 
@@ -18,30 +21,38 @@ abstract class BaseState {
     return msg;
   }
 
-  stateInitLoad(bool busy, {bool success, String error}) {
-    _busy = busy;
+  void setState(
+      {bool busy,
+      bool success,
+      String error,
+      void Function() myOnStateChanged}) {
+    _busy = busy ?? _busy;
     _success = success ?? _success;
     _error = error ?? _error;
+    myOnStateChanged?.call();
   }
 
-  _stateSet(bool busy, {bool success, String error}) {
-    _busy = busy;
-    _success = success ?? _success;
-    _error = error ?? _error;
-    _onStateChanged?.call();
+  void wait({signal = true}) {
+    if (!_busy) {
+      _busy = true;
+      _error = '';
+
+      if (signal) _onStateChanged?.call();
+    }
   }
 
-  void wait() {
-    // if(!_busy)
-    _stateSet(true);
+  doneSucces({signal = true}) {
+    _busy = false;
+    _success = true;
+    _error = '';
+    if (signal) _onStateChanged?.call();
   }
 
-  doneSucces() {
-    _stateSet(false, success: true, error: '');
-  }
-
-  doneError([String error = '']) {
-    _stateSet(false, success: false, error: error);
+  doneError(String error, {signal = true}) {
+    _busy = false;
+    _success = false;
+    _error = error;
+    if (signal) _onStateChanged?.call();
   }
 
   stateFromMap(Map<String, dynamic> map) {
@@ -59,8 +70,5 @@ abstract class BaseState {
   }
 
   @override
-  String toString() {
-    String str = 'busy: $_busy, success: $_success,  error : $_error';
-    return str;
-  }
+  String toString() => 'busy: $_busy, success: $_success, error : $_error';
 }
