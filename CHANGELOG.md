@@ -1,3 +1,7 @@
+## [0.1.1] - 2019.07.15
+
+* Minor bugs and format fixed.
+
 ## [0.1.0] - 2019.07.12
 
 * The initState method has been added to the StateChannel class.

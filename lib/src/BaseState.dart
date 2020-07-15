@@ -3,8 +3,8 @@
 abstract class BaseState {
   BaseState(this._onStateChanged);
 
-initState();
-dispose();
+  initState();
+  dispose();
 
   ///A callback that sends a [ChannelSignal] to the [StateChannel]
   final void Function() _onStateChanged;

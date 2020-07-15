@@ -10,7 +10,7 @@ import 'ChannelSignal.dart';
 ///    ...
 /// }
 /// ```
-abstract class StateChannel<S extends ChannelSignal>{
+abstract class StateChannel<S extends ChannelSignal> {
   ///A controller with the stream it controls.
   final StreamController<S> _streamController = StreamController<S>.broadcast();
 
@@ -22,9 +22,9 @@ abstract class StateChannel<S extends ChannelSignal>{
     _streamController.sink.add(signal);
   }
 
- initState(){}
- 
-///Closes the StateChannel.
+  initState() {}
+
+  ///Closes the StateChannel.
   void dispose() {
     _streamController.close();
   }
