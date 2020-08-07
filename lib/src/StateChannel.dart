@@ -19,7 +19,7 @@ abstract class StateChannel<S extends ChannelSignal> {
 
 //Sends a StateBroadcast to the state channel
   void add(S signal) {
-    _streamController.sink.add(signal);
+    if (!_streamController.isClosed) _streamController.sink.add(signal);
   }
 
   initState() {}
