@@ -18,10 +18,13 @@ import 'StateChannel.dart';
 ///  @override
 ///  void initState() {
 ///    super.initState();
-///    mychannel =MyChannel();
+///    mychannel = MyChannel();
+///     WidgetsBinding.instance.addPostFrameCallback((_) {
+///       mychannel.afterInitState();
+///     });
 ///  }
 ///
-///
+/// 
 ///  @override
 ///  void dispose() {
 ///   mychannel.dispose();
@@ -37,7 +40,8 @@ import 'StateChannel.dart';
 ///     AvailableChannelBuilder<MyChannel,MyChannelSignal>(
 ///       channel: mychannel,
 ///       condition: (channel, signal) =>signal is CounterStateSignal,
-///       builder: (context, channel) => ....
+///       builder: (context, channel, child) => ....,
+///       child:OtherChildWidget()
 /// ),
 /// ...
 ///
@@ -45,19 +49,21 @@ import 'StateChannel.dart';
 
 class AvailableChannelBuilder<C extends StateChannel<S>,
     S extends ChannelSignal> extends StatefulWidget {
-  const AvailableChannelBuilder({
-    Key key,
-    @required this.channel,
-    this.condition,
-    @required this.builder,
-  })  : assert(channel != null),
+  const AvailableChannelBuilder(
+      {Key key,
+      @required this.channel,
+      this.condition,
+      @required this.builder,
+      this.child})
+      : assert(channel != null),
         assert(builder != null),
         super(key: key);
 
   ///[channel] that allows broadcasting about the status of state
   final C channel;
   final bool Function(C channel, S signal) condition;
-  final Widget Function(BuildContext context, C channel) builder;
+  final Widget Function(BuildContext context, C channel, Widget child) builder;
+  final Widget child;
 
   @override
   _AvailableChannelBuilderState<C, S> createState() =>
@@ -69,11 +75,13 @@ class _AvailableChannelBuilderState<C extends StateChannel<S>,
   ///[channel] that allows broadcasting about the status of state
   C channel;
   StreamSubscription<S> _subscription;
+  Widget child;
 
   @override
   void initState() {
     super.initState();
     channel = widget.channel;
+    child = widget.child;
     _subscribe();
   }
 
@@ -83,6 +91,7 @@ class _AvailableChannelBuilderState<C extends StateChannel<S>,
     if (oldWidget.channel != tempchannel) {
       _unsubscribe();
       channel = widget.channel;
+      child = widget.child;
       _subscribe();
     }
     super.didUpdateWidget(oldWidget);
@@ -115,6 +124,6 @@ class _AvailableChannelBuilderState<C extends StateChannel<S>,
 
   @override
   Widget build(BuildContext context) {
-    return widget.builder(context, channel);
+    return widget.builder(context, channel, child);
   }
 }

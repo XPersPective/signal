@@ -12,25 +12,27 @@ import 'StateChannel.dart';
 ///     OwnChannelBuilder<MyChannel,MyChannelSignal>(
 ///       channel: MyChannel(),
 ///       condition: (channel,signal) =>signal is CounterStateSignal,
-///       builder: (context, channel) => ....
+///       builder: (context, channel, child) => ....,
+///       child:OtherChildWidget()
 /// ),
 ///
 /// ```
 class OwnChannelBuilder<C extends StateChannel<S>, S extends ChannelSignal>
     extends StatefulWidget {
-  const OwnChannelBuilder({
-    Key key,
-    @required this.channel,
-    this.condition,
-    @required this.builder,
-  })  : assert(builder != null),
+  const OwnChannelBuilder(
+      {Key key,
+      @required this.channel,
+      this.condition,
+      @required this.builder,
+      this.child})
+      : assert(builder != null),
         assert(channel != null),
         super(key: key);
 
   final C channel;
   final bool Function(C channel, S signal) condition;
-  final Widget Function(BuildContext context, C channel) builder;
-
+  final Widget Function(BuildContext context, C channel, Widget child) builder;
+  final Widget child;
   @override
   _OwnChannelBuilderState<C, S> createState() =>
       _OwnChannelBuilderState<C, S>();
@@ -41,11 +43,13 @@ class _OwnChannelBuilderState<C extends StateChannel<S>,
   ///[channel] that allows broadcasting about the status of state
   C channel;
   StreamSubscription<S> _subscription;
+  Widget child;
 
   @override
   void initState() {
     super.initState();
     channel = widget.channel;
+    child = widget.child;
     _subscribe();
   }
 
@@ -56,6 +60,7 @@ class _OwnChannelBuilderState<C extends StateChannel<S>,
       _unsubscribe();
       channel.dispose();
       channel = widget.channel;
+      child = widget.child;
       _subscribe();
     }
     super.didUpdateWidget(oldWidget);
@@ -89,6 +94,6 @@ class _OwnChannelBuilderState<C extends StateChannel<S>,
 
   @override
   Widget build(BuildContext context) {
-    return widget.builder(context, channel);
+    return widget.builder(context, channel, child);
   }
 }

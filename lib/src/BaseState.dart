@@ -1,10 +1,9 @@
+import 'package:signal/src/BaseLifeCycle.dart';
+
 /// Base class for a state to be used in [StateChannel]
 /// This class must be inherited to create a state.
-abstract class BaseState {
+abstract class BaseState implements BaseLifeCycle {
   BaseState(this._onStateChanged);
-
-  initState();
-  dispose();
 
   ///A callback that sends a [ChannelSignal] to the [StateChannel]
   final void Function() _onStateChanged;
@@ -41,21 +40,21 @@ abstract class BaseState {
     }
   }
 
-  doneSucces({signal = true}) {
+  void doneSucces({signal = true}) {
     _busy = false;
     _success = true;
     _error = '';
     if (signal) _onStateChanged?.call();
   }
 
-  doneError(String error, {signal = true}) {
+  void doneError(String error, {signal = true}) {
     _busy = false;
     _success = false;
     _error = error;
     if (signal) _onStateChanged?.call();
   }
 
-  stateFromMap(Map<String, dynamic> map) {
+  void stateFromMap(Map<String, dynamic> map) {
     _busy = map['busy'];
     _success = map['success'];
     _error = map['error'];

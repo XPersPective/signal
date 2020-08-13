@@ -1,4 +1,10 @@
-## [0.1.2] - 2020.08.15
+## [0.2.0] - 2020.08.13
+
+* BaseLifeCycle added.
+* child option added.
+* new example added.
+
+## [0.1.2] - 2020.08.8
 
 * Bad state bug fixed.
 

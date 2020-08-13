@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'BaseLifeCycle.dart';
 import 'ChannelSignal.dart';
 
 //Base class for multiple state management
@@ -10,7 +11,7 @@ import 'ChannelSignal.dart';
 ///    ...
 /// }
 /// ```
-abstract class StateChannel<S extends ChannelSignal> {
+abstract class StateChannel<S extends ChannelSignal> implements BaseLifeCycle {
   ///A controller with the stream it controls.
   final StreamController<S> _streamController = StreamController<S>.broadcast();
 
@@ -22,9 +23,9 @@ abstract class StateChannel<S extends ChannelSignal> {
     if (!_streamController.isClosed) _streamController.sink.add(signal);
   }
 
-  initState() {}
-
   ///Closes the StateChannel.
+  ///The AncestorChannelProvider calls the dispos method itself.
+  @override
   void dispose() {
     _streamController.close();
   }

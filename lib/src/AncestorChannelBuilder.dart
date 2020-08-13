@@ -11,26 +11,34 @@ import 'ChannelSignal.dart';
 /// ```dart
 /// AncestorChannelBuilder<MyChannel,MyChannelSignal>(
 ///   condition: (channel,signal) =>signal is CounterStateSignal,
-///   builder:(BuildContext context, channel) =>
+///   builder:(BuildContext context, channel, child) =>
 ///    channel.counterState.busy ? CircularProgressIndicator() : !channel.counterState.success ? Text( channel.counterState.error) :
-///    Text( channel.counterState.count.toString(), ) ,
+///    Row( children: <Widget> [ Text( channel.counterState.count.toString()), child ] ),
+///    child: OtherChildWidget(),
+///    ),
+/// 
+/// or
+/// 
+/// /// AncestorChannelBuilder<MyChannel,MyChannelSignal>(
+///   condition: (channel,signal) =>signal is CounterStateSignal,
+///   builder:(BuildContext context, channel, _ ) =>
+///    channel.counterState.busy ? CircularProgressIndicator() : !channel.counterState.success ? Text( channel.counterState.error) :
+///    Text( channel.counterState.count.toString(), ),
 ///  )
 /// ```
 class AncestorChannelBuilder<C extends StateChannel<S>, S extends ChannelSignal>
     extends StatefulWidget {
-  const AncestorChannelBuilder({
-    Key key,
-    this.condition,
-    @required this.builder,
-  })  : assert(builder != null),
+  const AncestorChannelBuilder(
+      {Key key, this.condition, @required this.builder, this.child})
+      : assert(builder != null),
         super(key: key);
 
   /// When the channel broadcasts a [ChannelSignal], the [condition] function is called.
   /// The [condition] must be returned a [bool] which determines whether or not the [builder] function will be invoked.
   /// [condition] is optional and if it isn't implemented, it will default to `true`.
   final bool Function(C channel, S signal) condition;
-
-  final Widget Function(BuildContext context, C channel) builder;
+  final Widget Function(BuildContext context, C channel, Widget child) builder;
+  final Widget child;
 
   @override
   _AncestorChannelBuilderState<C, S> createState() =>
@@ -42,11 +50,13 @@ class _AncestorChannelBuilderState<C extends StateChannel<S>,
   ///[channel] that allows broadcasting about the status of state
   C channel;
   StreamSubscription<S> _subscription;
+  Widget child;
 
   @override
   void initState() {
     super.initState();
     channel = AncestorChannelProvider.of<C>(context);
+    child = widget.child;
     _subscribe();
   }
 
@@ -55,6 +65,7 @@ class _AncestorChannelBuilderState<C extends StateChannel<S>,
     if (oldWidget.condition != widget.condition) {
       _unsubscribe();
       channel = AncestorChannelProvider.of<C>(context);
+      child = widget.child;
       _subscribe();
     }
     super.didUpdateWidget(oldWidget);
@@ -87,6 +98,6 @@ class _AncestorChannelBuilderState<C extends StateChannel<S>,
 
   @override
   Widget build(BuildContext context) {
-    return widget.builder(context, channel);
+    return widget.builder(context, channel, child);
   }
 }
