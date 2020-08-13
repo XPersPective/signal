@@ -2,7 +2,7 @@
 <img src="https://flutterdersleri.com/wp-content/uploads/2020/08/signal_logo.png" height="150" alt="Signal" />
 </p>
 
-# signal 0.2.0
+# signal
 
 Stream-based multiple state management. Multiple state management in one channel. Similar to the bloc structure, but current states are always accessible.
 

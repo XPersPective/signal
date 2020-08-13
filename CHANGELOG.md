@@ -1,7 +1,11 @@
+## [0.2.1] - 2020.08.13
+
+* Formatting corrected..
+
 ## [0.2.0] - 2020.08.13
 
 * BaseLifeCycle added.
-* child option added.
+* child option added.formatting corrected.
 * new example added.
 
 ## [0.1.2] - 2020.08.8

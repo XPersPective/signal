@@ -16,9 +16,9 @@ import 'ChannelSignal.dart';
 ///    Row( children: <Widget> [ Text( channel.counterState.count.toString()), child ] ),
 ///    child: OtherChildWidget(),
 ///    ),
-/// 
+///
 /// or
-/// 
+///
 /// /// AncestorChannelBuilder<MyChannel,MyChannelSignal>(
 ///   condition: (channel,signal) =>signal is CounterStateSignal,
 ///   builder:(BuildContext context, channel, _ ) =>

@@ -24,7 +24,7 @@ import 'StateChannel.dart';
 ///     });
 ///  }
 ///
-/// 
+///
 ///  @override
 ///  void dispose() {
 ///   mychannel.dispose();
