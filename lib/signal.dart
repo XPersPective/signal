@@ -7,3 +7,4 @@ export 'src/BaseState.dart';
 export 'src/ChannelSignal.dart';
 export 'src/OwnChannelBuilder.dart';
 export 'src/StateChannel.dart';
+export 'src/BaseLifeCycle.dart';
