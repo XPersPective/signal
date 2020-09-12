@@ -1,3 +1,7 @@
+## [0.2.2+1] - 2020.09.12
+
+* Formatting corrected..
+
 ## [0.2.2] - 2020.09.12
 
 * Exported "BaseLifeCycle.dart".
