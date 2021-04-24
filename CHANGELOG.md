@@ -1,3 +1,11 @@
+## [0.2.5] - 2021.04.24
+
+* migrated to null safety.
+* AncestorChannelProvider => ChannelProvider 
+* AncestorChannelBuilder => ChannelBuilder 
+* AvailableChannelBuilder => deprecated
+* OwnChannelBuilder => deprecated
+
 ## [0.2.2+1] - 2020.09.12
 
 * Formatting corrected..

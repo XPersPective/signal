@@ -163,10 +163,10 @@ class MyChannel extends StateChannel<MyChannelSignal> {
 
 ```
 
-### AncestorChannelProvider
+### ChannelProvider
 
 Creates a channel, store it, and expose it to its descendants.
-A AncestorChannelProvider manages the lifecycle of the channel.
+A ChannelProvider manages the lifecycle of the channel.
 
 ``` 
 void main() => runApp(MyApp());
@@ -176,7 +176,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return AncestorChannelProvider<MyChannel>(
+    return ChannelProvider<MyChannel>(
       channel: MyChannel()..initState(),
       child: MaterialApp(
         title: 'Signal State Management',
@@ -189,18 +189,13 @@ class MyApp extends StatelessWidget {
 
 ```
 
-### AncestorChannelBuilder
+### ChannelBuilder
 
-AncestorChannelBuilder handles building a widget in response to new ChannelSignal broadcasting from AncestorChannelProvider on an ancestor.
+ChannelBuilder handles building a widget in response to new ChannelSignal broadcasting from ChannelProvider on an .
 
 ``` 
-@override
-void initState() {
-  super.initState();
- WidgetsBinding.instance.addPostFrameCallback((_) {   AncestorChannelProvider.of<MyChannel>(context).afterInitState();  });
-}
-
-AncestorChannelBuilder<MyChannel, MyChannelSignal>(
+ 
+ChannelBuilder<MyChannel, MyChannelSignal>(
     condition: (channel, signal) => signal is CounterStateSignal,
     builder: (context, channel, _) => 
       channel.counterState.busy ? CircularProgressIndicator():
@@ -209,78 +204,7 @@ AncestorChannelBuilder<MyChannel, MyChannelSignal>(
   ),
 
 ```
-
-### AvailableChannelBuilder
-
-AvailableChannelBuilder handles building a widget in response to new ChannelSignal broadcasting from existing in an Widget scope.
-
-``` 
-class _MyHomePageState extends State<MyHomePage> {
-
-  MyChannel availableMychannel;
-
-@override
-void initState() {
-  super.initState();
-  availableMychannel = MyChannel()..initState();
-   WidgetsBinding.instance.addPostFrameCallback((_) {  availableMychannel.afterInitState();  });
-}
-
-@override
-void dispose() {
- availableMychannel.dispose();
-  super.dispose();
-}
- 
-  @override
-  Widget build(BuildContext context) {
-
- ...
-
-     AvailableChannelBuilder<MyChannel,MyChannelSignal>(
-        channel: availableMychannel,
-        condition: (channel,signal) =>signal is CounterStateSignal,
-        builder: (context, channel, _ ) =>
-          channel.counterState.busy ? CircularProgressIndicator():
-          !channel.counterState.success ? Text(channel.counterStateSignal.error) :
-          Text(  channel.counterState.count.toString(),),
-    ),
   
- ...
-  }
-}
-
-```
-
-### OwnChannelBuilder
-
-OwnChannelBuilder creates a new Channel objec and handles building a widget in response to new StateSignal.
-OwnChannelBuilder does not expose it to its descendants.
-
-``` 
-class OtherWidget extends StatelessWidget {
-
-  @override
-  Widget build(BuildContext context) {
-   final mychannel = AncestorChannelProvider.of<MyChannel>(context);
- ...
-
-   OwnChannelBuilder<MyChannel,MyChannelSignal>(
-      channel: MyChannel()..initState(),
-      condition: (channel,signal) =>signal is CounterStateSignal,
-      builder: (context, channel, _) =>
-       channel.counterState.busy ? CircularProgressIndicator():
-      !channel.counterState.success ? Text(channel.counterStateSignal.error) :
-      Text(  channel.counterState.count.toString(),),
-  ),
-  
- ...
-  }
-}
-
-```
-
- 
 that's all.
 
 <p align="center">

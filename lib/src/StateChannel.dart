@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'BaseLifeCycle.dart';
-import 'ChannelSignal.dart';
+import 'package:basestate/basestate.dart';
+import 'channelsignal.dart';
 
 //Base class for multiple state management
 /// This class must be inherited to create your own state channel.
@@ -24,7 +24,7 @@ abstract class StateChannel<S extends ChannelSignal> implements BaseLifeCycle {
   }
 
   ///Closes the StateChannel.
-  ///The AncestorChannelProvider calls the dispos method itself.
+  ///The ChannelProvider calls the dispos method itself.
   @override
   void dispose() {
     _streamController.close();

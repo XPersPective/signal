@@ -8,8 +8,8 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return AncestorChannelProvider<MyChannel>(
-        channel: MyChannel()..initState(),
+    return ChannelProvider<MyChannel>(
+        channel: (context) => MyChannel(),
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           home: HomePage(),
@@ -17,33 +17,12 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      AncestorChannelProvider.of<MyChannel>(context).afterInitState();
-    });
-  }
-
-  @override
-  void dispose() {
-// The channel's dispose method is not called. Because the Channel(MyChannel) was started with an AncestorChannelProvider.
-    super.dispose();
-  }
-
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            'Signal State Management :Example for AncestorChannelBuilder',
-            style: TextStyle(fontSize: 12)),
+        title: Text('Signal State Management :Example for ChannelBuilder', style: TextStyle(fontSize: 12)),
       ),
       body: ListView(
         children: <Widget>[
@@ -51,7 +30,7 @@ class _HomePageState extends State<HomePage> {
             height: 50,
           ),
           Center(
-            child: AncestorChannelBuilder<MyChannel, MyChannelSignal>(
+            child: ChannelBuilder<MyChannel, MyChannelSignal>(
               condition: (channel, signal) => signal is CounterStateSignal,
               builder: (context, channel, _) {
                 final state = channel.counterState;
@@ -60,8 +39,7 @@ class _HomePageState extends State<HomePage> {
                     ? CircularProgressIndicator()
                     : !state.success
                         ? Text(state.error)
-                        : Text(state.count.toString(),
-                            style: TextStyle(fontSize: 25));
+                        : Text(state.count.toString(), style: TextStyle(fontSize: 25));
               },
             ),
           ),
@@ -77,9 +55,7 @@ class _HomePageState extends State<HomePage> {
                   alignment: Alignment.topCenter,
                   children: <Widget>[
                     RaisedButton(
-                      child: Text(state.isOpen
-                          ? 'Notification: on'
-                          : 'Notification: off'),
+                      child: Text(state.isOpen ? 'Notification: on' : 'Notification: off'),
                       onPressed: state.busy ? null : () => state.change(),
                     ),
                     if (state.busy) CircularProgressIndicator(),
@@ -91,32 +67,23 @@ class _HomePageState extends State<HomePage> {
           ),
           RaisedButton(
             child: Text('CounterState: increment'),
-            onPressed: () => AncestorChannelProvider.of<MyChannel>(context)
-                .counterState
-                .increment(),
+            onPressed: () => AncestorChannelProvider.of<MyChannel>(context).counterState.increment(),
           ),
           RaisedButton(
             child: Text('CounterState: decrementFuture'),
-            onPressed: () => AncestorChannelProvider.of<MyChannel>(context)
-                .counterState
-                .decrementFuture(),
+            onPressed: () => AncestorChannelProvider.of<MyChannel>(context).counterState.decrementFuture(),
           ),
           RaisedButton(
             child: Text('NotificationState: change'),
-            onPressed: () => AncestorChannelProvider.of<MyChannel>(context)
-                .notificationState
-                .change(),
+            onPressed: () => AncestorChannelProvider.of<MyChannel>(context).notificationState.change(),
           ),
           RaisedButton(
             child: Text('NotificationState: changeFuture'),
-            onPressed: () => AncestorChannelProvider.of<MyChannel>(context)
-                .notificationState
-                .changeFuture(),
+            onPressed: () => AncestorChannelProvider.of<MyChannel>(context).notificationState.changeFuture(),
           ),
           RaisedButton(
             child: Text('go to the OtherPage'),
-            onPressed: () => Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => OtherPage())),
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => OtherPage())),
           ),
         ],
       ),
@@ -153,9 +120,7 @@ class _OtherPageState extends State<OtherPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(
-              'Signal State Management :Example for AvailableChannelBuilder',
-              style: TextStyle(fontSize: 12))),
+          title: Text('Signal State Management :Example for AvailableChannelBuilder', style: TextStyle(fontSize: 12))),
       body: ListView(
         children: <Widget>[
           SizedBox(
@@ -172,8 +137,7 @@ class _OtherPageState extends State<OtherPage> {
                     ? CircularProgressIndicator()
                     : !state.success
                         ? Text(state.error)
-                        : Text(state.count.toString(),
-                            style: TextStyle(fontSize: 25));
+                        : Text(state.count.toString(), style: TextStyle(fontSize: 25));
               },
             ),
           ),
@@ -190,9 +154,7 @@ class _OtherPageState extends State<OtherPage> {
                   alignment: Alignment.topCenter,
                   children: <Widget>[
                     RaisedButton(
-                      child: Text(state.isOpen
-                          ? 'Notification: on'
-                          : 'Notification: off'),
+                      child: Text(state.isOpen ? 'Notification: on' : 'Notification: off'),
                       onPressed: state.busy ? null : () => state.change(),
                     ),
                     if (state.busy) CircularProgressIndicator(),
@@ -229,8 +191,7 @@ abstract class MyChannelSignal extends ChannelSignal {}
 class MyChannel extends StateChannel<MyChannelSignal> {
   MyChannel() {
     _counterState = CounterState(() => add(CounterStateSignal()));
-    _notificationState =
-        NotificationState(() => add(NotificationStateSignal()));
+    _notificationState = NotificationState(() => add(NotificationStateSignal()));
   }
 
 //signal: CounterStateSignal
