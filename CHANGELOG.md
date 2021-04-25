@@ -1,4 +1,4 @@
-## [0.2.5] - 2021.04.24
+## [1.0.0] - 2021.04.25
 
 * migrated to null safety.
 * AncestorChannelProvider => ChannelProvider 

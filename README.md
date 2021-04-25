@@ -2,7 +2,7 @@
 <img src="https://flutterdersleri.com/wp-content/uploads/2020/08/signal_logo.png" height="150" alt="Signal" />
 </p>
 
-# signal
+# "signal" - Multiple state management in one channel
 
 Stream-based multiple state management. Multiple state management in one channel. Similar to the bloc structure, but current states are always accessible.
 
@@ -11,120 +11,7 @@ Stream-based multiple state management. Multiple state management in one channel
 ### Create channel and its signal.
 
 ``` 
-abstract class MyChannelSignal extends ChannelSignal{}
 
-class MyChannel extends StateChannel<MyChannelSignal>{
- 
-}
-
-```
-
-### Create states and its signals
-
-``` 
-class CounterStateSignal extends MyChannelSignal {}
-
-class CounterState extends BaseState {
-  CounterState(void Function() onStateChanged) : super(onStateChanged);
-
-  int _count;
-  int get count => _count;
-
-  @override
-  void initState() {
-    wait(signal: false);
-    _count = 0;
-  }
-
-  @override
-  afterInitState() {
-   incrementFuture();
-  }
-
-  @override
-  void dispose() {}
-
-  void increment() {
-    _count = _count + 1;
-    doneSucces();
-  }
-
-  void decrement() {
-    _count = _count - 1;
-    doneSucces();
-  }
-
-  incrementFuture() async {
-    try {
-      wait();
-
-      await Future<void>.delayed(Duration(milliseconds: 500));
-      _count = _count + 1;
-
-      doneSucces();
-    } catch (e) {
-      doneError(e.toString());
-    }
-  }
-
-  decrementFuture() async {
-    try {
-      wait();
-
-      await Future<void>.delayed(Duration(milliseconds: 500));
-      _count = _count - 1;
-
-      doneSucces();
-    } catch (e) {
-      doneError(e.toString());
-    }
-  }
-}
-
-class NotificationStateSignal extends MyChannelSignal {}
-
-class NotificationState extends BaseState {
-  NotificationState(void Function() onStateChanged) : super(onStateChanged);
-
-  bool _isOpen;
-  bool get isOpen => _isOpen;
-
-  @override
-  initState() {
-    wait(signal: false);
-    _isOpen = false;
-  }
-
-  @override
-  afterInitState() => changeFuture();
-
-  @override
-  dispose() {}
-
-  change() {
-    _isOpen = !_isOpen;
-    doneSucces();
-  }
-
-  Future<void> changeFuture() async {
-    try {
-      wait();
-
-      await Future<void>.delayed(Duration(milliseconds: 500));
-      _isOpen = !_isOpen;
-
-      doneSucces();
-    } catch (e) {
-      doneError(e.toString());
-    }
-  }
-}
-
-```
-
-### Add states to the channel.
-
-``` 
 abstract class MyChannelSignal extends ChannelSignal {}
 
 class MyChannel extends StateChannel<MyChannelSignal> {
@@ -134,11 +21,11 @@ class MyChannel extends StateChannel<MyChannelSignal> {
   }
 
 //signal: CounterStateSignal
-  CounterState _counterState;
+  late CounterState _counterState;
   CounterState get counterState => _counterState;
 
 //signal: NotificationStateSignal
-  NotificationState _notificationState;
+  late NotificationState _notificationState;
   NotificationState get notificationState => _notificationState;
 
   @override
@@ -163,6 +50,107 @@ class MyChannel extends StateChannel<MyChannelSignal> {
 
 ```
 
+### Create states and its signals
+
+``` 
+
+class CounterStateSignal extends MyChannelSignal {}
+
+class CounterState extends BaseState {
+  CounterState(void Function() onStateChanged) : super(onStateChanged);
+
+  int _count = 0;
+  int get count => _count;
+
+  @override
+  void initState() {
+    wait(signal: false);
+    _count = 0;
+  }
+
+  @override
+  Future<void> afterInitState() async {
+    await incrementFuture();
+  }
+
+  @override
+  void dispose() {}
+
+  void increment() {
+    _count = _count + 1;
+    doneSuccess();
+  }
+
+  void decrement() {
+    _count = _count - 1;
+    doneSuccess();
+  }
+
+  Future<void> incrementFuture() async {
+    try {
+      wait();
+      await Future<void>.delayed(Duration(seconds: 5));
+      _count = _count + 1;
+
+      doneSuccess();
+    } catch (e) {
+      doneError(e.toString());
+    }
+  }
+
+  Future<void> decrementFuture() async {
+    try {
+      wait();
+      await Future<void>.delayed(Duration(seconds: 1));
+      _count = _count - 1;
+
+      doneSuccess();
+    } catch (e) {
+      doneError(e.toString());
+    }
+  }
+}
+
+class NotificationStateSignal extends MyChannelSignal {}
+
+class NotificationState extends BaseState {
+  NotificationState(void Function() onStateChanged) : super(onStateChanged);
+
+  bool _isOpen = false;
+  bool get isOpen => _isOpen;
+
+  @override
+  initState() {
+    wait(signal: false);
+    _isOpen = false;
+  }
+
+  @override
+  Future<void> afterInitState() async => await changeFuture();
+
+  @override
+  dispose() {}
+
+  change() {
+    _isOpen = !_isOpen;
+    doneSuccess();
+  }
+
+  Future<void> changeFuture() async {
+    try {
+      wait();
+      await Future<void>.delayed(Duration(seconds: 1));
+      _isOpen = !_isOpen;
+
+      doneSuccess();
+    } catch (e) {
+      doneError(e.toString());
+    }
+  }
+}
+
+```
+
 ### ChannelProvider
 
 Creates a channel, store it, and expose it to its descendants.
@@ -172,26 +160,23 @@ A ChannelProvider manages the lifecycle of the channel.
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-
     return ChannelProvider<MyChannel>(
-      channel: MyChannel()..initState(),
-      child: MaterialApp(
-        title: 'Signal State Management',
-        home: MyHomePage(),
-      ),
-
-    );
+        channel: (context) => MyChannel(),
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: HomePage(),
+        ));
   }
 }
+
 
 ```
 
 ### ChannelBuilder
 
-ChannelBuilder handles building a widget in response to new ChannelSignal broadcasting from ChannelProvider on an .
+ChannelBuilder handles building a widget in response to new ChannelSignal broadcasting from ChannelProvider on an.
 
 ``` 
  
@@ -208,5 +193,5 @@ ChannelBuilder<MyChannel, MyChannelSignal>(
 that's all.
 
 <p align="center">
-<img src="https://flutterdersleri.com/wp-content/uploads/2020/08/signal_example.gif"  alt="Signal Example" />
+<img src="https://flutterdersleri.com/wp-content/uploads/2021/04/signal2_5.gif"  alt="Signal Example" />
 </p>

@@ -34,7 +34,7 @@ class ChannelBuilder<C extends StateChannel<S>, S extends ChannelSignal> extends
   /// The [condition] must be returned a [bool] which determines whether or not the [builder] function will be invoked.
   /// [condition] is optional and if it isn't implemented, it will default to `true`.
   final bool Function(C channel, S signal)? condition;
-  final Widget Function({BuildContext context, C channel, Widget? child}) builder;
+  final Widget Function(BuildContext context, C channel, Widget? child) builder;
   final Widget? child;
 
   @override
@@ -72,5 +72,5 @@ class _ChannelBuilderState<C extends StateChannel<S>, S extends ChannelSignal> e
   }
 
   @override
-  Widget build(BuildContext context) => widget.builder(context: context, channel: channel, child: child);
+  Widget build(BuildContext context) => widget.builder(context, channel, child);
 }
