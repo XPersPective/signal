@@ -1,3 +1,7 @@
+## [1.1.0] - 2021.16.25
+
+* Updated the setState method of the BaseState package.
+ 
 ## [1.0.0] - 2021.04.25
 
 * migrated to null safety.
