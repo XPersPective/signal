@@ -1,4 +1,4 @@
-## [1.1.0] - 2021.16.25
+## [1.1.0] - 2021.06.25
 
 * Updated the setState method of the BaseState package.
  
