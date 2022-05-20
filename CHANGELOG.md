@@ -1,4 +1,4 @@
-## [1.1.1] - 2022.05.20
+## [1.1.2] - 2022.05.20
 
 * Fixed a non-nullable expression.
 
