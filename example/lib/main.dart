@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:signal/signal.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 abstract class MyChannelSignal extends ChannelSignal {}
@@ -76,7 +76,7 @@ class CounterState extends BaseState {
   Future<void> incrementFuture() async {
     try {
       wait();
-      await Future<void>.delayed(Duration(seconds: 5));
+      await Future<void>.delayed(const Duration(seconds: 5));
       _count = _count + 1;
 
       doneSuccess();
@@ -88,7 +88,7 @@ class CounterState extends BaseState {
   Future<void> decrementFuture() async {
     try {
       wait();
-      await Future<void>.delayed(Duration(seconds: 1));
+      await Future<void>.delayed(const Duration(seconds: 1));
       _count = _count - 1;
 
       doneSuccess();
@@ -126,7 +126,7 @@ class NotificationState extends BaseState {
   Future<void> changeFuture() async {
     try {
       wait();
-      await Future<void>.delayed(Duration(seconds: 1));
+      await Future<void>.delayed(const Duration(seconds: 1));
       _isOpen = !_isOpen;
 
       doneSuccess();
@@ -137,11 +137,13 @@ class NotificationState extends BaseState {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return ChannelProvider<MyChannel>(
         channel: (context) => MyChannel(),
-        child: MaterialApp(
+        child: const MaterialApp(
           debugShowCheckedModeBanner: false,
           home: HomePage(),
         ));
@@ -149,17 +151,17 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('Signal')),
+        title: const Center(child: Text('Signal')),
       ),
       body: ListView(
         children: <Widget>[
-          SizedBox(
-            height: 50,
-          ),
+          const SizedBox(height: 50),
           SizedBox(
             height: 45,
             width: 45,
@@ -171,8 +173,10 @@ class HomePage extends StatelessWidget {
                 return Stack(
                   alignment: Alignment.topCenter,
                   children: <Widget>[
-                    !state.success ? Text(state.error) : Text(state.count.toString(), style: TextStyle(fontSize: 25)),
-                    if (state.busy) CircularProgressIndicator(),
+                    !state.success
+                        ? Text(state.error)
+                        : Text(state.count.toString(), style: const TextStyle(fontSize: 25)),
+                    if (state.busy) const CircularProgressIndicator(),
                   ],
                 );
               },
@@ -187,38 +191,36 @@ class HomePage extends StatelessWidget {
                   alignment: Alignment.topCenter,
                   children: <Widget>[
                     TextButton(
+                      onPressed: state.busy ? null : () => state.change(),
                       child: Text(state.isOpen ? 'Notification: On' : 'Notification: Off',
                           style: TextStyle(fontSize: 25, color: state.isOpen ? Colors.green : Colors.red)),
-                      onPressed: state.busy ? null : () => state.change(),
                     ),
-                    if (state.busy) CircularProgressIndicator(),
+                    if (state.busy) const CircularProgressIndicator(),
                   ],
                 );
               }),
-          SizedBox(
-            height: 50,
-          ),
+          const SizedBox(height: 50),
           ChannelBuilder<MyChannel, MyChannelSignal>(
             condition: (channel, signal) => signal is CounterStateSignal || signal is NotificationStateSignal,
             builder: (context, channel, _) {
               final state = channel.counterState;
               return ElevatedButton(
-                child: Text('CounterState: increment'),
                 onPressed: channel.counterState.busy || channel.notificationState.busy ? null : () => state.increment(),
+                child: const Text('CounterState: increment'),
               );
             },
           ),
           ElevatedButton(
-            child: Text('CounterState: decrementFuture'),
             onPressed: () => ChannelProvider.of<MyChannel>(context).counterState.decrementFuture(),
+            child: const Text('CounterState: decrementFuture'),
           ),
           ElevatedButton(
-            child: Text('NotificationState: change'),
             onPressed: () => ChannelProvider.of<MyChannel>(context).notificationState.change(),
+            child: const Text('NotificationState: change'),
           ),
           ElevatedButton(
-            child: Text('NotificationState: changeFuture'),
             onPressed: () => ChannelProvider.of<MyChannel>(context).notificationState.changeFuture(),
+            child: const Text('NotificationState: changeFuture'),
           ),
         ],
       ),

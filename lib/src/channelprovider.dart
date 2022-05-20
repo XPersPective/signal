@@ -13,7 +13,7 @@ class ChannelProvider<C extends StateChannel> extends StatefulWidget {
   final Widget child;
 
   @override
-  _ChannelProviderState<C> createState() => _ChannelProviderState<C>();
+  State<ChannelProvider<C>> createState() => _ChannelProviderState<C>();
 
 //  Obtains the nearest [ChannelProvider<C>] up its widget tree and returns its channel of the given type [C].
   static C of<C extends StateChannel>(BuildContext context) {
@@ -34,8 +34,8 @@ class _ChannelProviderState<C extends StateChannel> extends State<ChannelProvide
   }
 
   @override
- Future<void> dispose() async {
-   await channel.dispose();
+  Future<void> dispose() async {
+    await channel.dispose();
     super.dispose();
   }
 

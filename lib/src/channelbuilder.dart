@@ -38,7 +38,7 @@ class ChannelBuilder<C extends StateChannel<S>, S extends ChannelSignal> extends
   final Widget Function()? child;
 
   @override
-  _ChannelBuilderState<C, S> createState() => _ChannelBuilderState<C, S>();
+  State<ChannelBuilder<C, S>> createState() => _ChannelBuilderState<C, S>();
 }
 
 class _ChannelBuilderState<C extends StateChannel<S>, S extends ChannelSignal> extends State<ChannelBuilder<C, S>> {
