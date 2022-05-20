@@ -35,27 +35,21 @@ class ChannelBuilder<C extends StateChannel<S>, S extends ChannelSignal> extends
   /// [condition] is optional and if it isn't implemented, it will default to `true`.
   final bool Function(C channel, S signal)? condition;
   final Widget Function(BuildContext context, C channel, Widget? child) builder;
-  final Widget? child;
+  final Widget Function()? child;
 
   @override
   _ChannelBuilderState<C, S> createState() => _ChannelBuilderState<C, S>();
 }
 
 class _ChannelBuilderState<C extends StateChannel<S>, S extends ChannelSignal> extends State<ChannelBuilder<C, S>> {
-  ///[channel] that allows broadcasting about the status of state
-  late final C channel;
   late final StreamSubscription<S> _subscription;
   Widget? child;
 
   @override
   void initState() {
     super.initState();
-    channel = ChannelProvider.of<C>(context);
-    child = widget.child;
-    _subscribe();
-  }
-
-  void _subscribe() {
+    child = widget.child?.call();
+    final channel = ChannelProvider.of<C>(context);
     _subscription = channel.stream.listen((signal) {
       if (widget.condition?.call(channel, signal) ?? true) {
         if (mounted) {
@@ -66,11 +60,11 @@ class _ChannelBuilderState<C extends StateChannel<S>, S extends ChannelSignal> e
   }
 
   @override
-  void dispose() {
-    _subscription.cancel();
+  Future<void> dispose() async {
+    await _subscription.cancel();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => widget.builder(context, channel, child);
+  Widget build(BuildContext context) => widget.builder(context, ChannelProvider.of<C>(context), child);
 }

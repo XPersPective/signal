@@ -16,7 +16,7 @@ abstract class StateChannel<S extends ChannelSignal> implements BaseLifeCycle {
   final StreamController<S> _streamController = StreamController<S>.broadcast();
 
   ///Stream as Broadcast Stream.
-  Stream<S> get stream => _streamController.stream.asBroadcastStream();
+  Stream<S> get stream => _streamController.stream;
 
 //Sends a StateBroadcast to the state channel
   void add(S signal) {
@@ -26,7 +26,7 @@ abstract class StateChannel<S extends ChannelSignal> implements BaseLifeCycle {
   ///Closes the StateChannel.
   ///The ChannelProvider calls the dispos method itself.
   @override
-  void dispose() {
-    _streamController.close();
+  Future<void> dispose() async {
+    if (!_streamController.isClosed) await _streamController.close();
   }
 }

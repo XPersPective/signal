@@ -1,3 +1,7 @@
+## [1.1.1] - 2022.05.20
+
+* Fixed a non-nullable expression.
+
 ## [1.1.0] - 2021.06.25
 
 * Updated the setState method of the BaseState package.

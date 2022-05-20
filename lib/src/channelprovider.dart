@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'statechannel.dart';
 
@@ -25,18 +24,18 @@ class ChannelProvider<C extends StateChannel> extends StatefulWidget {
 }
 
 class _ChannelProviderState<C extends StateChannel> extends State<ChannelProvider<C>> {
-  late C channel;
+  late final C channel;
 
   @override
   void initState() {
     super.initState();
     channel = widget.channel(context);
-    WidgetsBinding.instance?.addPostFrameCallback((_) => channel.afterInitState());
+    WidgetsBinding.instance.addPostFrameCallback((_) => channel.afterInitState());
   }
 
   @override
-  void dispose() {
-    channel.dispose();
+ Future<void> dispose() async {
+   await channel.dispose();
     super.dispose();
   }
 

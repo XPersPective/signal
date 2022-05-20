@@ -34,7 +34,7 @@ class MyChannel extends StateChannel<MyChannelSignal> {
   }
 
   @override
-  void dispose() {
+  Future<void> dispose() async {
     _counterState.dispose();
     _notificationState.dispose();
     super.dispose();
