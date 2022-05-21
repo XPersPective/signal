@@ -13,7 +13,7 @@ import 'channelsignal.dart';
 ///   condition: (channel,signal) =>signal is CounterStateSignal,
 ///   builder:(BuildContext context, channel, child) =>
 ///    channel.counterState.busy ? CircularProgressIndicator() : !channel.counterState.success ? Text( channel.counterState.error) :
-///    Row( children: <Widget> [ Text( channel.counterState.count.toString()), child ] ),
+///    Row( children: <Widget> [ Te xt( channel.counterState.count.toString()), child ] ),
 ///    child: OtherChildWidget(),
 ///    ),
 ///

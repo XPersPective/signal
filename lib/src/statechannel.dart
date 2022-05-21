@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:basestate/basestate.dart';
+import 'basestate.dart';
 import 'channelsignal.dart';
 
 //Base class for multiple state management
