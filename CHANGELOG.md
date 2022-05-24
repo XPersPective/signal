@@ -1,4 +1,4 @@
-## [1.1.5] - 2022.05.23
+## [1.1.6] - 2022.05.24
 
 * basestate added.
 * Fixed a non-nullable expression.
