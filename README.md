@@ -1,4 +1,4 @@
-# Signal - Reactive State Management for Flutter
+# 📡 Signal - Reactive State Management for Flutter
 
 Signal is a simple and efficient reactive state management library for Flutter applications. It provides an easy way to manage application state using signals and reactive patterns.
 
