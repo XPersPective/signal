@@ -1,3 +1,15 @@
+## [2.0.0] - 2025.07.20
+
+* Complete rewrite of the signal package with modern architecture
+* Renamed from Channel/BaseState to Signal for better clarity
+* Added comprehensive documentation and examples
+* Improved async operation handling with setState method
+* Enhanced type safety and performance optimization
+* Added SignalProvider and SignalBuilder widgets
+* Built-in loading states, error handling, and success states
+* Streamlined API with better lifecycle management
+* Breaking changes: Complete API redesign for better developer experience
+
 ## [1.1.6] - 2022.05.24
 
 * basestate added.
