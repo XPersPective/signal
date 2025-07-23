@@ -73,8 +73,11 @@ class HomePage extends StatelessWidget {
               children: <Widget>[
                 TextButton(
                   onPressed: signal.busy ? null : () => signal.change(),
-                  child: Text(signal.isOpen ? 'Notification: On' : 'Notification: Off',
-                      style: TextStyle(fontSize: 25, color: signal.isOpen ? Colors.green : Colors.red)),
+                  child: Text(
+                      signal.isOpen ? 'Notification: On' : 'Notification: Off',
+                      style: TextStyle(
+                          fontSize: 25,
+                          color: signal.isOpen ? Colors.green : Colors.red)),
                 ),
                 if (signal.busy) const CircularProgressIndicator(),
               ],

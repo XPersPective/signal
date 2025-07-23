@@ -16,11 +16,15 @@ import 'package:flutter/material.dart';
 abstract class Signal {
   /// Internal stream controller for broadcasting state changes to listeners.
   /// Internal stream controller for broadcasting state changes to listeners.
-  final StreamController<StateSignal> _streamController = StreamController<StateSignal>.broadcast();
+  final StreamController<StateSignal> _streamController =
+      StreamController<StateSignal>.broadcast();
+  bool _disposed = false;
 
   /// Adds a state change notification to the stream.
   void _add() {
-    if (!_streamController.isClosed) _streamController.sink.add(StateSignal());
+    if (!_disposed && !_streamController.isClosed) {
+      _streamController.sink.add(StateSignal());
+    }
   }
 
   /// Called when the signal is first initialized.
@@ -34,6 +38,7 @@ abstract class Signal {
   /// Disposes of the signal and cleans up resources.
   /// This method closes the stream controller to prevent memory leaks.
   Future<void> dispose() async {
+    _disposed = true;
     if (!_streamController.isClosed) await _streamController.close();
   }
 
@@ -69,7 +74,10 @@ abstract class Signal {
   /// - [doneErrorSignal]: Whether to emit a signal on error (default: true)
   /// - [onDoneError]: Custom error message formatter (optional)
   Future<void> setState(FutureOr<void> Function()? op,
-      {bool waitSignal = true, bool doneSuccessSignal = true, bool doneErrorSignal = true, String Function(dynamic e)? onDoneError}) async {
+      {bool waitSignal = true,
+      bool doneSuccessSignal = true,
+      bool doneErrorSignal = true,
+      String Function(dynamic e)? onDoneError}) async {
     try {
       wait(signal: waitSignal);
       await op?.call();
@@ -160,7 +168,9 @@ class SignalProvider<S extends Signal> extends StatefulWidget {
   /// final mySignal = SignalProvider.of<MySignal>(context);
   /// ```
   static S of<S extends Signal>(BuildContext context) {
-    final S? result = context.findAncestorWidgetOfExactType<_InheritedSignalProvider<S>>()?.signal;
+    final S? result = context
+        .findAncestorWidgetOfExactType<_InheritedSignalProvider<S>>()
+        ?.signal;
     assert(result != null, 'No Signal found in context');
     return result!;
   }
@@ -178,17 +188,19 @@ class _SignalProviderState<S extends Signal> extends State<SignalProvider<S>> {
     super.initState();
     signal = widget.signal(context);
     signal.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => signal.afterInitState());
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => signal.afterInitState());
   }
 
   @override
-  Future<void> dispose() async {
-    await signal.dispose();
+  void dispose() {
+    signal.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => _InheritedSignalProvider(signal: signal, child: widget.child);
+  Widget build(BuildContext context) =>
+      _InheritedSignalProvider(signal: signal, child: widget.child);
 }
 
 /// A widget that rebuilds when a Signal's state changes.
@@ -258,7 +270,8 @@ class _SignalBuilderState<S extends Signal> extends State<SignalBuilder<S>> {
   }
 
   @override
-  Widget build(BuildContext context) => widget.builder(context, SignalProvider.of<S>(context), child);
+  Widget build(BuildContext context) =>
+      widget.builder(context, SignalProvider.of<S>(context), child);
 }
 
 /// Internal InheritedWidget for providing Signal instances down the widget tree.
@@ -277,7 +290,8 @@ class _InheritedSignalProvider<S extends Signal> extends InheritedWidget {
   final S signal;
 
   @override
-  bool updateShouldNotify(covariant _InheritedSignalProvider<S> oldWidget) => false;
+  bool updateShouldNotify(covariant _InheritedSignalProvider<S> oldWidget) =>
+      false;
 }
 
 /// Event class for signal state changes.

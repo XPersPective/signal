@@ -1,6 +1,6 @@
 name: signal
 description: A reactive state management library for Flutter applications. Provides simple and efficient way to manage application state using signals and reactive patterns.
-version: 2.0.0
+version: 2.0.1
 homepage: https://flutterdersleri.com/
 repository: https://github.com/XPersPective/signal
 issue_tracker: https://github.com/XPersPective/signal/issues

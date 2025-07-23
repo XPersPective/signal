@@ -1,3 +1,8 @@
+## [2.0.1] - 2025.07.23
+
+* Added `_disposed` flag to Signal class to prevent multiple dispose calls.
+* Fixed a potential Future error when calling dispose more than once.
+
 ## [2.0.0] - 2025.07.20
 
 * Complete rewrite of the signal package with modern architecture
