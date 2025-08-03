@@ -1,27 +1,79 @@
 # 📡 Signal - Reactive State Management for Flutter
 
-Signal is a simple and efficient reactive state management library for Flutter applications. It provides an easy way to manage application state using signals and reactive patterns.
+Signal is a modern reactive state management library for Flutter applications. It provides a simple yet powerful way to manage application state with automatic UI updates using Streams internally but exposing a clean API.
 
-## Features
+## ✨ Key Features
 
-- **Reactive State Management**: Automatic UI updates through signals
-- **Async Operation Support**: Built-in support for loading states, error handling, and success states
-- **Easy Integration**: Seamless integration with Flutter widgets
-- **Performance Focused**: Efficient updates with minimal overhead
-- **Type-Safe**: Full utilization of Dart's strong type system
+- ✅ **Automatic state management** (busy, success, error states)
+- ✅ **Parent-child signal relationships** with automatic updates
+- ✅ **Proper disposal and memory management**
+- ✅ **Flutter integration** with Provider pattern
+- ✅ **Type-safe signal subscription**
+- ✅ **Debug tools** for development
+- ✅ **Stream-based reactivity** with clean API
 
-## Installation
+## 📦 Installation
 
-Add to your pubspec.yaml:
+Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  signal: ^2.0.0
+  signal: ^3.0.0
 ```
 
-## Basic Usage
+Then import:
 
-### Complete Example
+```dart
+import 'package:signal/signal.dart';
+```
+
+## 🚀 Quick Start
+
+### 1. Create a Signal class
+
+```dart
+class CounterSignal extends Signal {
+  int _count = 0;
+  int get count => _count;
+
+  void increment() {
+    setState(() async {
+      _count++;
+    });
+  }
+}
+```
+
+### 2. Provide the Signal
+
+```dart
+SignalProvider<CounterSignal>(
+  signal: (context) => CounterSignal(),
+  child: MyApp(),
+)
+```
+
+### 3. Listen to Signal updates
+
+```dart
+SignalBuilder<CounterSignal>(
+  builder: (context, signal, child) {
+    return Column(
+      children: [
+        Text('Count: ${signal.count}'),
+        if (signal.busy) CircularProgressIndicator(),
+        if (signal.error != null) Text('Error: ${signal.error}'),
+        ElevatedButton(
+          onPressed: signal.increment,
+          child: Text('Increment'),
+        ),
+      ],
+    );
+  },
+)
+```
+
+## 🔄 Complete Example
 
 Here's a complete working example that demonstrates the core features of Signal:
 
@@ -34,18 +86,308 @@ void main() {
 }
 
 // 1. Create your Signal class
-class NotificationSignal extends Signal {
-  bool _isOpen = false;
-  bool get isOpen => _isOpen;
+class CounterSignal extends Signal {
+  int _count = 0;
+  int get count => _count;
 
-  @override
-  initState() {
-    wait(signal: false);
-    _isOpen = false;
+  void increment() {
+    setState(() async {
+      _count++;
+    });
   }
 
+  void decrement() {
+    setState(() async {
+      _count--;
+    });
+  }
+
+  Future<void> loadData() async {
+    setState(() async {
+      // Simulate network request
+      await Future.delayed(Duration(seconds: 2));
+      _count = 100;
+    });
+  }
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
-  Future<void> afterInitState() async => await changeFuture();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Signal Example',
+      home: SignalProvider<CounterSignal>(
+        signal: (context) => CounterSignal(),
+        child: const MyHomePage(),
+      ),
+    );
+  }
+}
+
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Signal Counter'),
+      ),
+      body: SignalBuilder<CounterSignal>(
+        builder: (context, signal, child) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (signal.busy)
+                  const CircularProgressIndicator()
+                else
+                  Text(
+                    'Count: ${signal.count}',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                if (signal.error != null)
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      'Error: ${signal.error}',
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: signal.decrement,
+                      child: const Text('-'),
+                    ),
+                    ElevatedButton(
+                      onPressed: signal.increment,
+                      child: const Text('+'),
+                    ),
+                    ElevatedButton(
+                      onPressed: signal.loadData,
+                      child: const Text('Load Data'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+```
+
+## 🏗️ Advanced Usage
+
+### Multiple Signals with MultiSignalProvider
+
+```dart
+MultiSignalProvider(
+  signals: [
+    signalItem<UserSignal>((context) => UserSignal()),
+    signalItem<CounterSignal>((context) => CounterSignal()),
+    signalItem<ThemeSignal>((context) => ThemeSignal()),
+  ],
+  child: MyApp(),
+)
+```
+
+### Parent-Child Signal Relationships
+
+```dart
+class ParentSignal extends Signal {
+  String _data = 'Initial Data';
+  String get data => _data;
+
+  void updateData(String newData) {
+    setState(() async {
+      _data = newData;
+    });
+  }
+}
+
+class ChildSignal extends Signal {
+  String get parentData {
+    // Automatically subscribes to ParentSignal updates
+    final parent = subscribeToParent<ParentSignal>();
+    return parent.data;
+  }
+
+  void processParentData() {
+    setState(() async {
+      final processed = 'Processed: ${parentData}';
+      // Handle processed data
+    });
+  }
+}
+```
+
+## 🐛 Debug Tools
+
+Enable debug mode during development:
+
+```dart
+void main() {
+  SignalDebugConfig.enabled = true;
+  SignalDebugConfig.logLevel = SignalLogLevel.all;
+  runApp(MyApp());
+}
+```
+
+## 📚 API Reference
+
+### Signal Class
+
+The base class for all signals. Extend this class to create your reactive state:
+
+```dart
+abstract class Signal {
+  // State management
+  bool get busy;           // Loading state
+  dynamic get error;       // Error state
+  bool get success;        // Success state
+
+  // Methods to override
+  void setState(Future<void> Function() callback);
+  T subscribeToParent<T extends Signal>();
+}
+```
+
+### SignalProvider<S>
+
+Provides a signal to the widget tree:
+
+```dart
+SignalProvider<MySignal>(
+  signal: (context) => MySignal(),
+  child: Widget,
+)
+```
+
+### SignalBuilder<S>
+
+Builds UI that automatically updates when the signal changes:
+
+```dart
+SignalBuilder<MySignal>(
+  builder: (context, signal, child) {
+    return Widget();
+  },
+)
+```
+
+### MultiSignalProvider
+
+Provides multiple signals efficiently:
+
+```dart
+MultiSignalProvider(
+  signals: [
+    signalItem<Signal1>((context) => Signal1()),
+    signalItem<Signal2>((context) => Signal2()),
+  ],
+  child: Widget,
+)
+```
+
+## 🎯 Best Practices
+
+### 1. Keep Signals Focused
+```dart
+// ✅ Good - Single responsibility
+class UserSignal extends Signal {
+  User? _user;
+  User? get user => _user;
+
+  Future<void> loadUser(String id) async {
+    setState(() async {
+      _user = await userRepository.getUser(id);
+    });
+  }
+}
+
+// ❌ Avoid - Too many responsibilities
+class AppSignal extends Signal {
+  // Don't put everything in one signal
+}
+```
+
+### 2. Use setState for All Updates
+```dart
+// ✅ Good - Always use setState
+void updateData() {
+  setState(() async {
+    _data = newData;
+  });
+}
+
+// ❌ Avoid - Direct updates won't notify listeners
+void updateData() {
+  _data = newData; // UI won't update
+}
+```
+
+### 3. Handle Errors Properly
+```dart
+void loadData() {
+  setState(() async {
+    try {
+      _data = await api.getData();
+    } catch (e) {
+      // Error automatically handled by setState
+      rethrow;
+    }
+  });
+}
+```
+
+## 🧪 Testing
+
+Signal is designed to be easily testable:
+
+```dart
+void main() {
+  group('CounterSignal', () {
+    late CounterSignal signal;
+
+    setUp(() {
+      signal = CounterSignal();
+    });
+
+    test('should increment count', () {
+      expect(signal.count, 0);
+      signal.increment();
+      expect(signal.count, 1);
+    });
+
+    test('should handle async operations', () async {
+      expect(signal.busy, false);
+      
+      final future = signal.loadData();
+      expect(signal.busy, true);
+      
+      await future;
+      expect(signal.busy, false);
+      expect(signal.count, 100);
+    });
+  });
+}
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
   @override
   Future<void> dispose() async {
@@ -235,13 +577,15 @@ A widget that rebuilds when a Signal's state changes.
 
 ## Contributing
 
+## 🤝 Contributing
+
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## License
+## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Support
+## ⭐ Support
 
 If you find this package helpful, please give it a ⭐ on GitHub!
 

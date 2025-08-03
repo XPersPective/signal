@@ -1,9 +1,55 @@
-## [2.0.1] - 2025.07.23
+## [3.0.0] - 2025-08-03
 
-* Added `_disposed` flag to Signal class to prevent multiple dispose calls.
-* Fixed a potential Future error when calling dispose more than once.
+### Breaking Changes
+* Major version release with enhanced architecture
+* Improved Stream-based reactivity system
+* Modernized API design for better developer experience
+* Enhanced type safety and performance optimizations
 
-## [2.0.0] - 2025.07.20
+### Added
+* Production-ready signal system with comprehensive features
+* Advanced debugging and monitoring capabilities
+* Complete documentation and examples for pub.dev
+* Professional-grade state management solution
+* Enhanced error handling and lifecycle management
+
+### Improved
+* Signal provider architecture with better performance
+* Memory management and disposal patterns
+* Developer experience with cleaner API
+* Documentation quality and completeness
+
+### Fixed
+* All known issues from previous versions
+* Performance bottlenecks in signal updates
+* Memory leaks in complex signal hierarchies
+
+## [2.0.1] - 2025-07-22
+
+### Added
+* MultiSignalProvider for managing multiple signals efficiently
+* signalItem<S> factory function for cleaner signal setup syntax
+* SignalFactory typedef for improved type safety
+* Comprehensive debug system with SignalDebugConfig and SignalDebugRegistry
+* Debug panels and logging for development tools
+* Performance monitoring and state tracking capabilities
+* Professional documentation with modern examples
+
+### Improved
+* Stream-based reactivity architecture for better performance
+* Widget discovery using findAncestorWidgetOfExactType for Stream integration
+* Proper naming conventions following Dart lowerCamelCase standards
+* Enhanced error handling and state management
+* Memory management and disposal lifecycle
+* Complete API documentation and usage examples
+
+### Fixed
+* Disposal flag to prevent multiple dispose calls
+* Potential Future errors during disposal
+* Widget tree integration issues with Stream-based updates
+* Memory leaks in parent-child signal relationships
+
+## [2.0.0] - 2025-07-20
 
 * Complete rewrite of the signal package with modern architecture
 * Renamed from Channel/BaseState to Signal for better clarity
