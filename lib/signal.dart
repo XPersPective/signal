@@ -532,42 +532,6 @@ class SignalDebugRegistry {
   }
 }
 
-// /// Debug panel widget for visualizing signal states in development.
-// ///
-// /// ```dart
-// /// if (kDebugMode)
-// ///   SignalDebugPanel(signals: SignalDebugRegistry.allSignals),
-// /// ```
-// class SignalDebugPanel extends StatelessWidget {
-//   /// List of signals to display in the debug panel.
-//   final List<Signal> signals;
-
-//   const SignalDebugPanel({super.key, required this.signals});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     if (!kDebugMode) return const SizedBox.shrink();
-
-//     return Material(
-//       child: ExpansionTile(
-//         title: Text('🔍 Signal Debug Panel (${signals.length} signals)'),
-//         children: signals.map((signal) {
-//           final info = signal.debugInfo;
-//           return ListTile(
-//             title: Text(info['name']),
-//             subtitle: Text('Busy: ${info['busy']}, Success: ${info['success']}, Error: ${info['error']?.toString() ?? 'None'}'),
-//             trailing: info['busy']
-//                 ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator())
-//                 : info['error'] != null
-//                     ? const Icon(Icons.error, color: Colors.red)
-//                     : const Icon(Icons.check, color: Colors.green),
-//           );
-//         }).toList(),
-//       ),
-//     );
-//   }
-// }
-
 /// Debug panel widget for visualizing signal states in development.
 ///
 /// ```dart

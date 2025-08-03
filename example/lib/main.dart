@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:signal/signal.dart';
 
 void main() {
+  SignalDebugConfig.enableLogging = true;
   runApp(const MyApp());
 }
 
